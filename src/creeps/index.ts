@@ -23,6 +23,7 @@ const creepTypes = {
 
 export function commandCreeps() {
   Object.values(Game.creeps).forEach(creep => {
+    if (creep.spawning) return;
     const fn = creepTypes[creep.memory.role];
     fn(creep);
   });
