@@ -1,5 +1,11 @@
-function harvester(creep: Creep) {
-  // Harvest
+interface HarvesterCreep extends Creep {
+  memory: {
+    role: 'harvester';
+    destination?: string;
+  };
+}
+
+function harvester(creep: HarvesterCreep) {
   if (hasFreeCapacity(creep.store, RESOURCE_ENERGY)) {
     const sources = creep.room.find(FIND_SOURCES);
 
@@ -46,4 +52,7 @@ const isTarget = (structure: AnyStructure) =>
 const hasFreeCapacity = (store: Store, resource?: ResourceConstant) =>
   store.getFreeCapacity(resource) || 0 > 0;
 
-export default harvester;
+export default {
+  run: harvester,
+  body: [WORK, CARRY, MOVE],
+};
