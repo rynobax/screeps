@@ -18,12 +18,12 @@ export function spawnCreeps() {
   const spawn = Object.values(Game.spawns)[0];
   if (roleCount('harvester') < 2) {
     spawn.spawnCreep(harvester.body, newName('harvester'), {
-      memory: { role: 'harvester' },
+      memory: harvester.memory,
     });
   }
   if (roleCount('worker') < 1) {
     spawn.spawnCreep(worker.body, newName('worker'), {
-      memory: { role: 'worker' },
+      memory: worker.memory,
     });
   }
 }

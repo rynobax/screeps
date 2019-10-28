@@ -22,7 +22,7 @@ function worker(creep: WorkerCreep) {
     case 'upgrade':
       return upgrade(creep);
     default:
-      creep.say('Nothing to do');
+      creep.say('Bored');
       return;
   }
 }
@@ -39,7 +39,10 @@ function upgrade(creep: WorkerCreep) {
   }
 }
 
+const memory: WorkerCreep['memory'] = { role: 'worker', task: null };
+
 export default {
   run: worker,
   body: [WORK, CARRY, MOVE],
+  memory,
 };
