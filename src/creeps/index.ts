@@ -1,10 +1,9 @@
-import harvester from './harvester';
-import worker from './worker';
+import { doActivity } from '../activities';
 
 type Role = Creep['memory']['role'];
 
 function newName(role: Role) {
-  for (let i = 1; i < 2; i++) {
+  for (let i = 1; i < 100; i++) {
     const name = `${role}_${i}`;
     if (!Game.creeps[name]) return name;
   }
@@ -14,29 +13,40 @@ function newName(role: Role) {
 const roleCount = (role: Role) =>
   Object.values(Game.creeps).filter(c => c.memory.role === role).length;
 
+const spawnCreep = (
+  spawn: StructureSpawn,
+  role: Role,
+  body: BodyPartConstant[]
+) =>
+  spawn.spawnCreep(body, newName('harvester'), {
+    memory: {
+      role,
+      state: { type: 'idle' },
+    } as any,
+  });
+
 export function spawnCreeps() {
   const spawn = Object.values(Game.spawns)[0];
-  if (roleCount('harvester') < 2) {
-    spawn.spawnCreep(harvester.body, newName('harvester'), {
-      memory: harvester.memory,
-    });
-  }
-  if (roleCount('worker') < 1) {
-    spawn.spawnCreep(worker.body, newName('worker'), {
-      memory: worker.memory,
-    });
+  if (roleCount('harvester') < 3) {
+    spawnCreep(spawn, 'harvester', [WORK, CARRY, MOVE]);
   }
 }
 
+const harvesterTasks = [
+  'harvest' as const,
+  'store' as const,
+  'upgrade' as const,
+];
+const harvester = (creep: Creep) => doActivity(creep, harvesterTasks);
+
 const creepTypes = {
   harvester,
-  worker,
 };
 
 export function commandCreeps() {
   Object.values(Game.creeps).forEach(creep => {
     if (creep.spawning) return;
-    const { run } = creepTypes[creep.memory.role];
+    const run = creepTypes[creep.memory.role];
     run(creep as any);
   });
 }

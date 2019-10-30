@@ -4828,7 +4828,7 @@ interface StructureStorage extends OwnedStructure<STRUCTURE_STORAGE> {
   /**
    * An object with the storage contents.
    */
-  store: StoreDefinition;
+  store: Store;
   /**
    * The total amount of resources the storage can contain.
    */
