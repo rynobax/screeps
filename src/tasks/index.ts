@@ -16,6 +16,9 @@ export function doTask(creep: Creep, possibilities: TaskName[]) {
 
   // If we aren't done yet, keep going
   if (!currentTask.done(creep as any)) {
+    if(creep.name === 'grunt_4') {
+      console.log('not done!', currentTaskName)
+    }
     return currentTask.run(creep as any);
   }
 

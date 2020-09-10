@@ -9,3 +9,9 @@ export const BODY_PART_COST = {
   [CLAIM]: 600,
   [TOUGH]: 10,
 };
+
+export const PATH_STYLE = {
+  HARVEST: { stroke: '#FFF' },
+  STORE: { stroke: '#AFF' },
+  UPGRADE: { stroke: '#AAF' },
+}

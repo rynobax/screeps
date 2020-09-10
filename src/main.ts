@@ -22,14 +22,14 @@ function clearMemory() {
       Object.keys(Memory.harvesters).forEach((k) => {
         if (Memory.harvesters[k][name]) delete Memory.harvesters[k][name];
       });
-    }
-
-    // Eventually this should not run every loop
-    // Remove creeps that have been renamed
-    const role = Memory.creeps[name].role;
-    if (!creepTypes[role]) {
-      console.log(`suiciding old creep ${name}`);
-      Game.creeps[name].suicide();
+    } else {
+      // Eventually this should not run every loop
+      // Remove creeps that have been renamed
+      const role = Memory.creeps[name].role;
+      if (!creepTypes[role]) {
+        console.log(`suiciding old creep ${name}`);
+        Game.creeps[name].suicide();
+      }
     }
   }
 }

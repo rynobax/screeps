@@ -1,3 +1,5 @@
+import { PATH_STYLE } from "utils/constants";
+
 type State = { type: 'store'; destination: Id<Structure> };
 
 interface StoreCreep extends Creep {
@@ -28,7 +30,7 @@ const store: Task<StoreCreep> = {
     }
 
     if (creep.transfer(home, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-      creep.moveTo(home, { visualizePathStyle: { stroke: '#ffffff' } });
+      creep.moveTo(home, { visualizePathStyle: PATH_STYLE.STORE });
     }
   },
   initializeIfPossible: (c) => {

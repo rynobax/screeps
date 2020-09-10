@@ -1,3 +1,5 @@
+import { PATH_STYLE } from "utils/constants";
+
 type State = { type: 'upgrade' };
 
 interface UpgradeCreep extends Creep {
@@ -21,9 +23,7 @@ const upgrade: Task<UpgradeCreep> = {
     }
 
     if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-      creep.moveTo(creep.room.controller, {
-        visualizePathStyle: { stroke: '#ffffff' },
-      });
+      creep.moveTo(creep.room.controller, { visualizePathStyle: PATH_STYLE.UPGRADE });
     }
   },
   initializeIfPossible: (c) => {

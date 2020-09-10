@@ -1,3 +1,5 @@
+import { PATH_STYLE } from "utils/constants";
+
 type State = { type: 'harvest'; destination: Id<Source> };
 
 interface HarvestCreep extends Creep {
@@ -19,7 +21,7 @@ function claimSource(source: Source, creep: Creep) {
 }
 
 function releaseSource(source: Source, creep: Creep) {
-  delete Memory.harvesters[source.id][creep.name];
+  delete Memory.harvesters?.[source.id]?.[creep.name];
 }
 
 function getSource(creep: HarvestCreep) {
@@ -47,7 +49,7 @@ const harvest: Task<HarvestCreep> = {
     const source = getSource(creep);
 
     if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
-      creep.moveTo(source, { visualizePathStyle: { stroke: '#ffaa00' } });
+      creep.moveTo(source, { visualizePathStyle: PATH_STYLE.HARVEST });
     }
   },
   initializeIfPossible: (c) => {
