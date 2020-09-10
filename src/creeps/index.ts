@@ -1,3 +1,4 @@
+import { BODY_PART_COST } from 'utils/constants';
 import { doTask } from '../tasks';
 
 type Role = Creep['memory']['role'];
@@ -13,17 +14,34 @@ function newName(role: Role) {
 const roleCount = (role: Role) =>
   Object.values(Game.creeps).filter((c) => c.memory.role === role).length;
 
-const spawnCreep = (
+const spawnCreepIfNeeded = (
   spawn: StructureSpawn,
   role: Role,
-  body: BodyPartConstant[]
-) =>
-  spawn.spawnCreep(body, newName('grunt'), {
+  bodyParts: BodyPartConstant[]
+) => {
+  const haveCount = roleCount(role);
+  const neededCount = desiredCount(role, spawn);
+
+  // Don't spawn if we have enough
+  if (haveCount >= neededCount) return;
+
+  const neededEnergy = bodyParts.reduce((p, c) => p + BODY_PART_COST[c], 0);
+  const haveEnergy = spawn.store[RESOURCE_ENERGY];
+
+  // Don't spawn if don't have enough energy
+  if(haveEnergy < neededEnergy) return;
+
+  // Don't spawn if already spawning
+  if(spawn.spawning) return;
+
+  console.log(`spawning ${role} (${haveCount + 1}/${neededCount})`);
+  spawn.spawnCreep(bodyParts, newName('grunt'), {
     memory: {
       role,
       state: { type: 'idle' },
     },
   });
+};
 
 function desiredCount(role: Role, spawn: StructureSpawn) {
   switch (role) {
@@ -36,12 +54,11 @@ function desiredCount(role: Role, spawn: StructureSpawn) {
 
 type RoleInfo = {
   type: Role;
-  // runTask: (creep: Creep) => void;
   tasks: TaskName[];
   parts: BodyPartConstant[];
 };
 
-const creepTypes: Record<Role, RoleInfo> = {
+export const creepTypes: Record<Role, RoleInfo> = {
   grunt: {
     type: 'grunt',
     tasks: ['harvest', 'store', 'upgrade'],
@@ -53,16 +70,7 @@ export function spawnCreeps() {
   const spawn = Object.values(Game.spawns)[0];
 
   for (const { type, parts } of Object.values(creepTypes)) {
-    const have = roleCount(type);
-    const need = desiredCount(type, spawn);
-    if (have < need) {
-      console.log(`spawning ${type} (${have + 1}/${need})`);
-      spawnCreep(spawn, type, parts);
-    }
-  }
-
-  if (roleCount('grunt') < desiredCount('grunt', spawn)) {
-    spawnCreep(spawn, 'grunt', [WORK, CARRY, MOVE]);
+    spawnCreepIfNeeded(spawn, type, parts);
   }
 }
 
