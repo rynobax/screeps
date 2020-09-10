@@ -55,7 +55,7 @@ const findOpenEnergySource = (source: Source) => {
     };
   }
   const max = harvesters[source.id].max;
-  if (Object.keys(harvesters[source.id].claims).length > max) return false;
+  if (Object.keys(harvesters[source.id].claims).length >= max) return false;
   else return true;
 };
 
