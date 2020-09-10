@@ -1,5 +1,6 @@
 import { BODY_PART_COST } from 'utils/constants';
 import { doTask } from '../tasks';
+import egirl from './egirl';
 
 type Role = Creep['memory']['role'];
 
@@ -29,10 +30,10 @@ const spawnCreepIfNeeded = (
   const haveEnergy = spawn.store[RESOURCE_ENERGY];
 
   // Don't spawn if don't have enough energy
-  if(haveEnergy < neededEnergy) return;
+  if (haveEnergy < neededEnergy) return;
 
   // Don't spawn if already spawning
-  if(spawn.spawning) return;
+  if (spawn.spawning) return;
 
   console.log(`spawning ${role} (${haveCount + 1}/${neededCount})`);
   spawn.spawnCreep(bodyParts, newName('egirl'), {
@@ -46,24 +47,15 @@ const spawnCreepIfNeeded = (
 function desiredCount(role: Role, spawn: StructureSpawn) {
   switch (role) {
     case 'egirl':
-      return spawn.room.find(FIND_SOURCES).length * 3;
+      return egirl.count(spawn);
     default:
       return 0;
   }
 }
 
-type RoleInfo = {
-  type: Role;
-  tasks: TaskName[];
-  parts: BodyPartConstant[];
-};
 
-export const creepTypes: Record<Role, RoleInfo> = {
-  egirl: {
-    type: 'egirl',
-    tasks: ['harvest', 'store', 'upgrade'],
-    parts: [WORK, CARRY, MOVE],
-  },
+export const creepTypes: Record<Role, RoleShape> = {
+  egirl: egirl.shape,
 };
 
 export function spawnCreeps() {

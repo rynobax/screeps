@@ -1,7 +1,4 @@
 // example declaration file - remove these and add your own custom typings
-type Role = 'egirl';
-
-type TaskName = 'idle' | 'harvest' | 'store' | 'upgrade';
 
 // memory extension samples
 interface CreepMemory {
@@ -27,6 +24,8 @@ declare namespace NodeJS {
   }
 }
 
+type TaskName = 'idle' | 'harvest' | 'store' | 'upgrade';
+
 interface Task<TCreep extends Creep> {
   // Will return true when creep is finished with the current task
   done: (creep: TCreep) => boolean;
@@ -37,3 +36,12 @@ interface Task<TCreep extends Creep> {
   // clear memory and stuff
   terminate: (creep: TCreep) => void;
 }
+
+type Role = 'egirl';
+
+type RoleShape = {
+  type: Role;
+  tasks: TaskName[];
+  parts: BodyPartConstant[];
+};
+
