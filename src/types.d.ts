@@ -1,5 +1,5 @@
 // example declaration file - remove these and add your own custom typings
-type Role = 'harvester';
+type Role = 'grunt';
 
 type TaskName = 'idle' | 'harvest' | 'store' | 'upgrade';
 

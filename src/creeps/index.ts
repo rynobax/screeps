@@ -18,7 +18,7 @@ const spawnCreep = (
   role: Role,
   body: BodyPartConstant[]
 ) =>
-  spawn.spawnCreep(body, newName('harvester'), {
+  spawn.spawnCreep(body, newName('grunt'), {
     memory: {
       role,
       state: { type: 'idle' },
@@ -27,7 +27,7 @@ const spawnCreep = (
 
 function desiredCount(role: Role, spawn: StructureSpawn) {
   switch (role) {
-    case 'harvester':
+    case 'grunt':
       return spawn.room.find(FIND_SOURCES).length * 3;
     default:
       return 0;
@@ -42,9 +42,8 @@ type RoleInfo = {
 };
 
 const creepTypes: Record<Role, RoleInfo> = {
-  harvester: {
-    type: 'harvester',
-    // runTask: (creep: Creep) => doTask(creep, ['harvest', 'store', 'upgrade']),
+  grunt: {
+    type: 'grunt',
     tasks: ['harvest', 'store', 'upgrade'],
     parts: [WORK, CARRY, MOVE],
   },
@@ -62,8 +61,8 @@ export function spawnCreeps() {
     }
   }
 
-  if (roleCount('harvester') < desiredCount('harvester', spawn)) {
-    spawnCreep(spawn, 'harvester', [WORK, CARRY, MOVE]);
+  if (roleCount('grunt') < desiredCount('grunt', spawn)) {
+    spawnCreep(spawn, 'grunt', [WORK, CARRY, MOVE]);
   }
 }
 
