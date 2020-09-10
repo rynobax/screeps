@@ -1,4 +1,4 @@
-import { PATH_STYLE } from "utils/constants";
+import { PATH_STYLE } from 'utils/constants';
 
 type State = { type: 'harvest'; destination: Id<Source> };
 
@@ -9,19 +9,47 @@ interface HarvestCreep extends Creep {
   };
 }
 
-const findEnergySource = (source: Source) => {
+const maxHarvestersForEnergySource = (source: Source) => {
+  const src = source.pos;
+
+  let openSpots = 0;
+  for (let x = -1; x < 2; x++) {
+    for (let y = -1; y < 2; y++) {
+      // ignore source
+      if (x === 0 && y === 0) continue;
+
+      const pos = source.room.getPositionAt(src.x + x, src.y + y);
+      if (pos) {
+        const stuff = pos.look();
+        const isWall = !!stuff.find((e) => e.terrain === 'wall');
+        if (!isWall) openSpots++;
+      }
+    }
+  }
+
+  return openSpots;
+};
+
+const findOpenEnergySource = (source: Source) => {
   if (!source.energy) return false;
-  if (Object.keys(Memory.harvesters[source.id] || {}).length > 2) return false;
+  if (!Memory.harvesters[source.id]) {
+    Memory.harvesters[source.id] = {
+      max: maxHarvestersForEnergySource(source),
+      claims: {},
+    };
+  }
+  const max = Memory.harvesters[source.id].max;
+  if (Object.keys(Memory.harvesters[source.id].claims).length > max)
+    return false;
   else return true;
 };
 
 function claimSource(source: Source, creep: Creep) {
-  if (!Memory.harvesters[source.id]) Memory.harvesters[source.id] = {};
-  Memory.harvesters[source.id][creep.name] = true;
+  Memory.harvesters[source.id].claims[creep.name] = true;
 }
 
 function releaseSource(source: Source, creep: Creep) {
-  delete Memory.harvesters?.[source.id]?.[creep.name];
+  delete Memory.harvesters?.[source.id].claims?.[creep.name];
 }
 
 function getSource(creep: HarvestCreep) {
@@ -37,7 +65,7 @@ function getSource(creep: HarvestCreep) {
 function possible(creep: Creep) {
   if (!creep.store.getFreeCapacity()) return false;
   const sources = creep.room.find(FIND_SOURCES);
-  const source = sources.find(findEnergySource);
+  const source = sources.find(findOpenEnergySource);
   return !!source;
 }
 
@@ -57,7 +85,7 @@ const harvest: Task<HarvestCreep> = {
 
     const creep = c as HarvestCreep;
     const sources = creep.room.find(FIND_SOURCES);
-    const source = sources.find(findEnergySource);
+    const source = sources.find(findOpenEnergySource);
     if (source) {
       claimSource(source, creep);
       creep.memory.state = { type: 'harvest', destination: source.id };

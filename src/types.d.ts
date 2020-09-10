@@ -10,7 +10,14 @@ interface CreepMemory {
 }
 
 interface Memory {
-  harvesters: { [mineId: string]: { [creepId: string]: true } };
+  harvesters: {
+    [mineId: string]: {
+      max: number;
+      claims: {
+        [creepId: string]: boolean;
+      };
+    };
+  };
 }
 
 // `global` extension samples
