@@ -9,13 +9,14 @@ interface StoreCreep extends Creep {
 
 const getSpawn = (creep: Creep) => creep.room.find(FIND_MY_SPAWNS)[0];
 
+function possible(creep: Creep) {
+  if (!creep.store.getUsedCapacity(RESOURCE_ENERGY)) return false;
+  return !!getSpawn(creep).store.getFreeCapacity(RESOURCE_ENERGY);
+}
+
 const store: Task<StoreCreep> = {
   done: (creep) => {
     return !creep.store.getUsedCapacity(RESOURCE_ENERGY);
-  },
-  possible: (creep) => {
-    if (!creep.store.getUsedCapacity(RESOURCE_ENERGY)) return false;
-    return !!getSpawn(creep).store.getFreeCapacity(RESOURCE_ENERGY);
   },
   run: (creep) => {
     const home = Game.getObjectById(creep.memory.state.destination);
@@ -28,11 +29,14 @@ const store: Task<StoreCreep> = {
       creep.moveTo(home, { visualizePathStyle: { stroke: '#ffffff' } });
     }
   },
-  initialize: (c) => {
+  initializeIfPossible: (c) => {
+    if(!possible(c)) return null;
+
     const creep = c as StoreCreep;
     creep.memory.state = { type: 'store', destination: getSpawn(creep).id };
     return creep;
   },
+  terminate: () => null,
 };
 
 export default store;

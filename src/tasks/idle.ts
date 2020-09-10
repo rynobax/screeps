@@ -9,15 +9,15 @@ interface IdleCreep extends Creep {
 
 const idle: Task<IdleCreep> = {
   done: () => true,
-  possible: () => true,
   run: creep => {
     creep.say('idle');
   },
-  initialize: c => {
+  initializeIfPossible: c => {
     const creep = c as IdleCreep;
     creep.memory.state = { type: 'idle' };
     return creep;
   },
+  terminate: () => null,
 };
 
 export default idle;

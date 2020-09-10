@@ -23,10 +23,10 @@ declare namespace NodeJS {
 interface Task<TCreep extends Creep> {
   // Will return true when creep is finished with the current task
   done: (creep: TCreep) => boolean;
-  // Will return true or false based on if the creep can do this
-  possible: (creep: Creep) => boolean;
   // Make the creep do the task
   run: (creep: TCreep) => void;
-  // Initialize this task
-  initialize: (TCreep: Creep) => TCreep;
+  // set up memory and stuff
+  initializeIfPossible: (creep: Creep) => TCreep | null;
+  // clear memory and stuff
+  terminate: (creep: TCreep) => void;
 }

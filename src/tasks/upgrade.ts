@@ -7,12 +7,13 @@ interface UpgradeCreep extends Creep {
   };
 }
 
+function possible(creep: Creep) {
+  return !!creep.store.getUsedCapacity();
+}
+
 const upgrade: Task<UpgradeCreep> = {
   done: (creep) => {
     return !creep.store.getUsedCapacity();
-  },
-  possible: (creep) => {
-    return !!creep.store.getUsedCapacity();
   },
   run: (creep) => {
     if (!creep.room.controller) {
@@ -25,11 +26,14 @@ const upgrade: Task<UpgradeCreep> = {
       });
     }
   },
-  initialize: (c) => {
+  initializeIfPossible: (c) => {
+    if(!possible(c)) return null;
+
     const creep = c as UpgradeCreep;
     creep.memory.state = { type: 'upgrade' };
     return creep;
   },
+  terminate: () => null,
 };
 
 export default upgrade;
