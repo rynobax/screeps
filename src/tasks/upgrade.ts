@@ -7,7 +7,7 @@ interface UpgradeCreep extends Creep {
   };
 }
 
-const upgrade: Activity<UpgradeCreep> = {
+const upgrade: Task<UpgradeCreep> = {
   done: (creep: UpgradeCreep) => {
     return !creep.store.getUsedCapacity();
   },
@@ -25,7 +25,7 @@ const upgrade: Activity<UpgradeCreep> = {
       });
     }
   },
-  transition: (creep: UpgradeCreep) => {
+  initialize: (creep: UpgradeCreep) => {
     creep.memory.state = { type: 'upgrade' };
     return creep.memory;
   },

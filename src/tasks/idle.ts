@@ -7,13 +7,13 @@ interface IdleCreep extends Creep {
   };
 }
 
-const idle: Activity<IdleCreep> = {
+const idle: Task<IdleCreep> = {
   done: () => true,
   possible: () => true,
   run: creep => {
     creep.say('idle');
   },
-  transition: creep => {
+  initialize: creep => {
     creep.memory.state = { type: 'idle' };
     return creep.memory;
   },

@@ -1,4 +1,4 @@
-import { doActivity } from '../activities';
+import { doTask } from '../tasks';
 
 type Role = Creep['memory']['role'];
 
@@ -25,9 +25,14 @@ const spawnCreep = (
     } as any,
   });
 
+function desiredHarvesters(spawn: StructureSpawn) {
+  return spawn.room.find(FIND_SOURCES).length * 3;
+}
+
 export function spawnCreeps() {
   const spawn = Object.values(Game.spawns)[0];
-  if (roleCount('harvester') < 3) {
+
+  if (roleCount('harvester') < desiredHarvesters(spawn)) {
     spawnCreep(spawn, 'harvester', [WORK, CARRY, MOVE]);
   }
 }
@@ -37,7 +42,7 @@ const harvesterTasks = [
   'store' as const,
   'upgrade' as const,
 ];
-const harvester = (creep: Creep) => doActivity(creep, harvesterTasks);
+const harvester = (creep: Creep) => doTask(creep, harvesterTasks);
 
 const creepTypes = {
   harvester,

@@ -9,7 +9,7 @@ interface StoreCreep extends Creep {
 
 const getSpawn = (creep: Creep) => creep.room.find(FIND_MY_SPAWNS)[0];
 
-const store: Activity<StoreCreep> = {
+const store: Task<StoreCreep> = {
   done: creep => {
     return !creep.store.getUsedCapacity();
   },
@@ -28,7 +28,7 @@ const store: Activity<StoreCreep> = {
       creep.moveTo(home, { visualizePathStyle: { stroke: '#ffffff' } });
     }
   },
-  transition: creep => {
+  initialize: creep => {
     creep.memory.state = { type: 'store', destination: getSpawn(creep).id };
     return creep.memory;
   },

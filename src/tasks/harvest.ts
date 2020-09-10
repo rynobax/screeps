@@ -7,19 +7,25 @@ interface HarvestCreep extends Creep {
   };
 }
 
-const isActiveEnergySource = (creep: Creep) => (source: Source) => {
+const findEnergySource =  (source: Source) => {
   if (!source.energy) return false;
+  if (Object.keys(Memory.harvesters[source.id] || {}).length > 2) return false;
   else return true;
 };
 
-const harvest: Activity<HarvestCreep> = {
+function claimSource(source: Source, creep: Creep) {
+  if (!Memory.harvesters[source.id]) Memory.harvesters[source.id] = {};
+  Memory.harvesters[source.id][creep.name] = true;
+}
+
+const harvest: Task<HarvestCreep> = {
   done: creep => {
     return !creep.store.getFreeCapacity();
   },
   possible: creep => {
-    if(!creep.store.getFreeCapacity()) return false;
+    if (!creep.store.getFreeCapacity()) return false;
     const sources = creep.room.find(FIND_SOURCES);
-    const source = sources.find(isActiveEnergySource(creep));
+    const source = sources.find(findEnergySource);
     return !!source;
   },
   run: creep => {
@@ -33,11 +39,12 @@ const harvest: Activity<HarvestCreep> = {
       creep.moveTo(mine, { visualizePathStyle: { stroke: '#ffaa00' } });
     }
   },
-  transition: creep => {
+  initialize: creep => {
     const sources = creep.room.find(FIND_SOURCES);
-    const source = sources.find(isActiveEnergySource(creep));
+    const source = sources.find(findEnergySource);
     if (source) {
       creep.memory.state = { type: 'harvest', destination: source.id };
+      claimSource(source, creep);
     }
     return creep.memory;
   },

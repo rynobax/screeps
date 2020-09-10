@@ -7,8 +7,7 @@ interface CreepMemory {
 }
 
 interface Memory {
-  uuid: number;
-  log: any;
+  harvesters: { [mineId: string]: { [creepId: string]: true } };
 }
 
 // `global` extension samples
@@ -18,9 +17,13 @@ declare namespace NodeJS {
   }
 }
 
-interface Activity<TCreep extends Creep> {
+interface Task<TCreep extends Creep> {
+  // Will return true when creep is finished with the current task
   done: (creep: TCreep) => boolean;
+  // Will return true or false based on if the creep can do this
   possible: (creep: Creep) => boolean;
+  // Make the creep do the task
   run: (creep: TCreep) => void;
-  transition: (TCreep: TCreep) => TCreep['memory'];
+  // Initialize this task
+  initialize: (TCreep: TCreep) => TCreep['memory'];
 }
