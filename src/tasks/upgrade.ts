@@ -8,13 +8,13 @@ interface UpgradeCreep extends Creep {
 }
 
 const upgrade: Task<UpgradeCreep> = {
-  done: (creep: UpgradeCreep) => {
+  done: (creep) => {
     return !creep.store.getUsedCapacity();
   },
-  possible: (creep: Creep) => {
+  possible: (creep) => {
     return !!creep.store.getUsedCapacity();
   },
-  run: (creep: UpgradeCreep) => {
+  run: (creep) => {
     if (!creep.room.controller) {
       throw Error('Cannot upgrade with no controller');
     }
@@ -25,9 +25,10 @@ const upgrade: Task<UpgradeCreep> = {
       });
     }
   },
-  initialize: (creep: UpgradeCreep) => {
+  initialize: (c) => {
+    const creep = c as UpgradeCreep;
     creep.memory.state = { type: 'upgrade' };
-    return creep.memory;
+    return creep;
   },
 };
 
