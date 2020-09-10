@@ -4,6 +4,7 @@ type Role = 'harvester';
 // memory extension samples
 interface CreepMemory {
   role: Role;
+  state: {},
 }
 
 interface Memory {

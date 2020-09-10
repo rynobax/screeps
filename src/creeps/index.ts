@@ -22,7 +22,7 @@ const spawnCreep = (
     memory: {
       role,
       state: { type: 'idle' },
-    } as any,
+    },
   });
 
 function desiredCount(role: Role, spawn: StructureSpawn) {
