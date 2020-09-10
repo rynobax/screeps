@@ -39,14 +39,15 @@ const harvest: Task<HarvestCreep> = {
       creep.moveTo(mine, { visualizePathStyle: { stroke: '#ffaa00' } });
     }
   },
-  initialize: creep => {
+  initialize: c => {
+    const creep = c as HarvestCreep;
     const sources = creep.room.find(FIND_SOURCES);
     const source = sources.find(findEnergySource);
     if (source) {
       creep.memory.state = { type: 'harvest', destination: source.id };
       claimSource(source, creep);
     }
-    return creep.memory;
+    return creep;
   },
 };
 

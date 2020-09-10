@@ -36,14 +36,16 @@ function desiredCount(role: Role, spawn: StructureSpawn) {
 
 type RoleInfo = {
   type: Role;
-  runTask: (creep: Creep) => void;
+  // runTask: (creep: Creep) => void;
+  tasks: TaskName[];
   parts: BodyPartConstant[];
 };
 
 const creepTypes: Record<Role, RoleInfo> = {
   harvester: {
     type: 'harvester',
-    runTask: (creep: Creep) => doTask(creep, ['harvest', 'store', 'upgrade']),
+    // runTask: (creep: Creep) => doTask(creep, ['harvest', 'store', 'upgrade']),
+    tasks: ['harvest', 'store', 'upgrade'],
     parts: [WORK, CARRY, MOVE],
   },
 };
@@ -55,7 +57,7 @@ export function spawnCreeps() {
     const have = roleCount(type);
     const need = desiredCount(type, spawn);
     if (have < need) {
-      console.log(`spawning ${type} (${have + 1}/${need})`)
+      console.log(`spawning ${type} (${have + 1}/${need})`);
       spawnCreep(spawn, type, parts);
     }
   }
@@ -68,7 +70,6 @@ export function spawnCreeps() {
 export function commandCreeps() {
   Object.values(Game.creeps).forEach((creep) => {
     if (creep.spawning) return;
-    const run = creepTypes[creep.memory.role].runTask;
-    run(creep as any);
+    doTask(creep, creepTypes[creep.memory.role].tasks);
   });
 }

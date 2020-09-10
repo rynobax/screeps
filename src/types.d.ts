@@ -1,10 +1,12 @@
 // example declaration file - remove these and add your own custom typings
 type Role = 'harvester';
 
+type TaskName = 'idle' | 'harvest' | 'store' | 'upgrade';
+
 // memory extension samples
 interface CreepMemory {
   role: Role;
-  state: {},
+  state: { type: TaskName };
 }
 
 interface Memory {
@@ -26,5 +28,5 @@ interface Task<TCreep extends Creep> {
   // Make the creep do the task
   run: (creep: TCreep) => void;
   // Initialize this task
-  initialize: (TCreep: TCreep) => TCreep['memory'];
+  initialize: (TCreep: Creep) => TCreep;
 }

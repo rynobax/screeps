@@ -13,9 +13,10 @@ const idle: Task<IdleCreep> = {
   run: creep => {
     creep.say('idle');
   },
-  initialize: creep => {
+  initialize: c => {
+    const creep = c as IdleCreep;
     creep.memory.state = { type: 'idle' };
-    return creep.memory;
+    return creep;
   },
 };
 
