@@ -35,7 +35,7 @@ const spawnCreepIfNeeded = (
   if(spawn.spawning) return;
 
   console.log(`spawning ${role} (${haveCount + 1}/${neededCount})`);
-  spawn.spawnCreep(bodyParts, newName('grunt'), {
+  spawn.spawnCreep(bodyParts, newName('egirl'), {
     memory: {
       role,
       state: { type: 'idle' },
@@ -45,7 +45,7 @@ const spawnCreepIfNeeded = (
 
 function desiredCount(role: Role, spawn: StructureSpawn) {
   switch (role) {
-    case 'grunt':
+    case 'egirl':
       return spawn.room.find(FIND_SOURCES).length * 3;
     default:
       return 0;
@@ -59,8 +59,8 @@ type RoleInfo = {
 };
 
 export const creepTypes: Record<Role, RoleInfo> = {
-  grunt: {
-    type: 'grunt',
+  egirl: {
+    type: 'egirl',
     tasks: ['harvest', 'store', 'upgrade'],
     parts: [WORK, CARRY, MOVE],
   },

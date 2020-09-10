@@ -1,4 +1,4 @@
-import harvest from './harvest';
+import harvest, { initializeHarvestMemory } from './harvest';
 import idle from './idle';
 import store from './store';
 import upgrade from './upgrade';
@@ -36,6 +36,11 @@ export function doTask(creep: Creep, possibilities: TaskName[]) {
   creep.say(`${currentTaskName} -> idle`);
   const idleCreep = idle.initializeIfPossible(creep);
   if(idleCreep) idle.run(idleCreep);
+}
+
+export function initializeTaskMemory(roomId: string) {
+  Memory.rooms[roomId] = {} as any;
+  initializeHarvestMemory(roomId);
 }
 
 export default tasks;

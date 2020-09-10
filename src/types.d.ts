@@ -1,5 +1,5 @@
 // example declaration file - remove these and add your own custom typings
-type Role = 'grunt';
+type Role = 'egirl';
 
 type TaskName = 'idle' | 'harvest' | 'store' | 'upgrade';
 
@@ -9,7 +9,7 @@ interface CreepMemory {
   state: { type: TaskName };
 }
 
-interface Memory {
+interface RoomMemory {
   harvesters: {
     [mineId: string]: {
       max: number;

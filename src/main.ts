@@ -1,4 +1,4 @@
-import tasks from 'tasks';
+import tasks, { initializeTaskMemory } from 'tasks';
 import { ErrorMapper } from 'utils/ErrorMapper';
 import { commandCreeps, spawnCreeps, creepTypes } from './creeps';
 
@@ -13,7 +13,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
 });
 
 function setupMemory() {
-  if (!Memory.harvesters) Memory.harvesters = {};
+  if (!Memory.rooms) Memory.rooms = {};
+  Object.keys(Game.rooms).forEach((room) => {
+    if(!Memory.rooms[room]) initializeTaskMemory(room);
+  });
 }
 
 function cleanupCreep(name: string) {
@@ -49,7 +52,7 @@ function clearMemory() {
 function resetAll() {
   for (const name in Memory.creeps) {
     const creep = Game.creeps[name];
-    creep.suicide();
+    if(creep) creep.suicide();
   }
   Object.keys(Memory).forEach((k) => {
     delete (Memory as any)[k];

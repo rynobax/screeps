@@ -9,6 +9,21 @@ interface HarvestCreep extends Creep {
   };
 }
 
+export function initializeHarvestMemory(roomId: string) {
+  if (!Memory.rooms[roomId].harvesters) Memory.rooms[roomId].harvesters = {};
+
+  const room = Game.rooms[roomId];
+  const sources = room.find(FIND_SOURCES);
+  sources.forEach((source) => {
+    if (!Memory.rooms[roomId].harvesters[source.id]) {
+      Memory.rooms[roomId].harvesters[source.id] = {
+        max: maxHarvestersForEnergySource(source),
+        claims: {},
+      };
+    }
+  });
+}
+
 const maxHarvestersForEnergySource = (source: Source) => {
   const src = source.pos;
 
@@ -32,24 +47,24 @@ const maxHarvestersForEnergySource = (source: Source) => {
 
 const findOpenEnergySource = (source: Source) => {
   if (!source.energy) return false;
-  if (!Memory.harvesters[source.id]) {
-    Memory.harvesters[source.id] = {
+  const harvesters = source.room.memory.harvesters;
+  if (!harvesters[source.id]) {
+    harvesters[source.id] = {
       max: maxHarvestersForEnergySource(source),
       claims: {},
     };
   }
-  const max = Memory.harvesters[source.id].max;
-  if (Object.keys(Memory.harvesters[source.id].claims).length > max)
-    return false;
+  const max = harvesters[source.id].max;
+  if (Object.keys(harvesters[source.id].claims).length > max) return false;
   else return true;
 };
 
 function claimSource(source: Source, creep: Creep) {
-  Memory.harvesters[source.id].claims[creep.name] = true;
+  source.room.memory.harvesters[source.id].claims[creep.name] = true;
 }
 
 function releaseSource(source: Source, creep: Creep) {
-  delete Memory.harvesters?.[source.id].claims?.[creep.name];
+  delete source.room.memory.harvesters?.[source.id].claims?.[creep.name];
 }
 
 function getSource(creep: HarvestCreep) {
