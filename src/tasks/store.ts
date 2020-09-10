@@ -16,7 +16,9 @@ function possible(creep: Creep) {
 
 const store: Task<StoreCreep> = {
   done: (creep) => {
-    return !creep.store.getUsedCapacity(RESOURCE_ENERGY);
+    const creepIsEmpty = !creep.store.getUsedCapacity(RESOURCE_ENERGY);
+    const targetIsFull = !getSpawn(creep).store.getFreeCapacity(RESOURCE_ENERGY);
+    return creepIsEmpty || targetIsFull;
   },
   run: (creep) => {
     const home = Game.getObjectById(creep.memory.state.destination);
